@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 var urls = [];
 
 function makeid() {
@@ -10,6 +12,27 @@ function makeid() {
   return text;
 }
 
+// Connect to mLab database
+mongoose.connect('mongodb://a:a@ds263408.mlab.com:63408/codeshala');
+
+// Database Setup
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+
+db.once('open', function() {
+  // we're connected!
+  console.log("Connected To MongoLab Cloud Database :p");
+});
+
+// Schema Setup
+var urlSchema = mongoose.Schema({
+  url: String,
+  key: String
+});
+
+// Model Setup
+var Url = mongoose.model('Url', urlSchema);
+
 module.exports = function shorten(app) {
   app.post('/shorten', function (req, res) {
     var url = req.body.url;
@@ -17,23 +40,36 @@ module.exports = function shorten(app) {
     if(key === ''){
       key = makeid();
     }
-    urls.push({url: url, key: key});
+    var newUrl = new Url({url: url, key: key});
+    console.log(newUrl.url+'\n '+newUrl.key+'\n ');
+    // urls.push({url: url, key: key});
 
-    for (var i = 0; i < urls.length; i++) {
-      console.log(urls[i]);
-    }
+    newUrl.save(function (err, e) {
+      if(err) return console.error(err);
+      console.log('Url created!');
+    });
   });
 
   app.get('/:key', function (req, res) {
-    var found = false;
-    for (var i = 0; i < urls.length; i++) {
-      if (urls[i].key === req.params.key){
-        res.redirect(urls[i].url);
-        found = true;
+    Url.findOne({key: req.params.key}, function (err, url) {
+      if(err){
+        console.log('error: ' + err);
       }
-    }
-    if(!found){
-      res.send('Not found!');
-    }
+      if(url !== null){
+        console.log(url);
+        res.redirect(url.url);
+      }
+    });
+
+    // var found = false;
+    // for (var i = 0; i < urls.length; i++) {
+    //   if (urls[i].key === req.params.key){
+    //     res.redirect(urls[i].url);
+    //     found = true;
+    //   }
+    // }
+    // if(!found){
+    //   res.send('Not found!');
+    // }
   });
 };

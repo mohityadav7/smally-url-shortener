@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const shortenController = require('./controllers/shortenController');
 
 const app = express();
@@ -15,13 +16,6 @@ shortenController(app);
 app.get('/', function (req, res) {
   res.sendFile('./views/index.html', {root: __dirname});
 });
-
-// app.post('/short', function (req, res) {
-//   var url = req.body.url;
-//   var key = req.body.key;
-//   var time_stamp = Date();
-//   console.log(url + " " + key + time_stamp);
-// });
 
 app.get('/*', function (req, res) {
   res.send('404 | Page not found!');

@@ -14,6 +14,7 @@ $(document).ready(function() {
       })
       .done(function() {
         console.log("success");
+        $('.result').html = 'success!';
       })
       .fail(function() {
         console.log("error");
