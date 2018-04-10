@@ -41,7 +41,7 @@ module.exports = function shorten(app) {
       key = makeid();
     }
     var newUrl = new Url({url: url, key: key});
-    console.log(newUrl.url+'\n '+newUrl.key+'\n ');
+    console.log(newUrl.url+'\n'+newUrl.key+'\n ');
     // urls.push({url: url, key: key});
 
     newUrl.save(function (err, e) {
@@ -60,16 +60,5 @@ module.exports = function shorten(app) {
         res.redirect(url.url);
       }
     });
-
-    // var found = false;
-    // for (var i = 0; i < urls.length; i++) {
-    //   if (urls[i].key === req.params.key){
-    //     res.redirect(urls[i].url);
-    //     found = true;
-    //   }
-    // }
-    // if(!found){
-    //   res.send('Not found!');
-    // }
   });
 };
