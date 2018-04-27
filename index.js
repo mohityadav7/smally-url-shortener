@@ -8,13 +8,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // static files
 app.use(express.static(__dirname + '/public'));
+// set view engine
+app.set('view engine', 'ejs');
 
 // fire controllers
 shortenController(app);
 
 // routes
 app.get('/', function (req, res) {
-  res.sendFile('./views/index.html', {root: __dirname});
+  res.render('index', {data: ''});
 });
 
 app.get('/*', function (req, res) {

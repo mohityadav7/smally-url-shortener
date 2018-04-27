@@ -41,13 +41,17 @@ module.exports = function shorten(app) {
       key = makeid();
     }
     var newUrl = new Url({url: url, key: key});
-    console.log(newUrl.url+'\n'+newUrl.key+'\n ');
-    // urls.push({url: url, key: key});
+    console.log(newUrl.url+'\n '+newUrl.key+'\n ');
 
     newUrl.save(function (err, e) {
       if(err) return console.error(err);
       console.log('Url created!');
     });
+    res.render('index', {data: 'https://urll.herokuapp.com/' + key});
+  });
+
+  app.get('/shorten', function (req, res){
+    res.redirect('/');
   });
 
   app.get('/:key', function (req, res) {
