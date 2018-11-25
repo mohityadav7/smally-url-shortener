@@ -12,6 +12,7 @@ module.exports = (app) => {
   // auth logout
   app.get('/auth/logout', (req, res) => {
     req.logout();
+    req.flash('info', 'Successfully logged out');
     res.redirect('/');
   });
 
@@ -29,6 +30,7 @@ module.exports = (app) => {
       User.findOne({
         _id: req.user._id
       }).then((user) => {
+        req.flash('success', 'Logged in successfully');
         res.redirect('/');
       });
     } else {

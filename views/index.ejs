@@ -1,44 +1,46 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-    crossorigin="anonymous">
-  <link rel="stylesheet" href="style.css">
+    crossorigin="anonymous" />
+  <link rel="stylesheet" href="style.css" />
   <title>URL Shortener</title>
 </head>
 
 <body align="center">
   <%- include('navbar') -%>
   <div class="main container">
+    <%- messages('my_message_template', locals) %>
     <h1 class="text-center heading display-4 mb-4">Shorten your URL</h1>
 
     <form id="shortUrlCreatorForm" method="post" action="/shorten">
       <div class="form-row align-items-center">
         <div class="col-md-12">
-
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <div class="input-group-text">URL</div>
             </div>
-            <input type="text" name="url" class="form-control" id="url" placeholder="URL (complete)">
+            <input type="text" name="url" class="form-control" id="url" placeholder="URL (complete)" />
           </div>
 
           <div class="input-group mb-2">
             <div class="input-group-prepend">
               <div class="input-group-text">urll.herokuapp.com/</div>
             </div>
-            <input type="text" name="key" class="form-control" id="key" placeholder="(Optional)">
+            <input type="text" name="key" class="form-control" id="key" placeholder="(Optional)" />
           </div>
         </div>
 
         <div class="col-md-12">
-          <input type="submit" value="Shorten" class="d-block mx-auto btn btn-info mb-2">
-          <!-- <button type="submit" id="short" class="d-block mx-auto btn btn-primary mb-2">Shorten</button> -->
+          <input type="submit" value="Shorten" class="d-block mx-auto btn btn-info mb-2" />
+          <!--
+              <button type="submit" id="short" class="d-block mx-auto btn btn-primary mb-2">Shorten</button>
+            -->
         </div>
       </div>
     </form>
@@ -46,8 +48,10 @@
     <!-- show shorted url -->
     <% if(data){ %>
     <h6>Shorted Url:</h6>
-    <div class="result p-2 border rounded border-success"><a href="<%= data %>">
-        <%= data %></a></div>
+    <div class="result p-2 border rounded border-success">
+      <a href="<%= data %>">
+        <%= data %></a>
+    </div>
     <% } %>
 
     <!-- show already shorted urls if logged in -->
@@ -56,7 +60,8 @@
       <h1 class="h3">Saved URLs</h1>
       <ul>
         <% for(var i=0; i < urlList.length; ++i){ %>
-        <li><a href="<%= urlList[i].url %>">
+        <li>
+          <a href="<%= urlList[i].url %>">
             <h5>
               <%= urlList[i].key %>
             </h5>
@@ -69,12 +74,6 @@
       </ul>
     </div>
     <% } %>
-
-
-
-
-
-
   </div>
 
   <!-- Optional JavaScript -->

@@ -86,6 +86,7 @@ module.exports = (app) => {
   app.get('/:key', (req, res) => {
     const user = req.user;
     // if user is logged in, search in current user's urls
+    // if (req.params.key != '') {
     if (user) {
       // search user by id
       User.findOne({
@@ -100,7 +101,12 @@ module.exports = (app) => {
         console.log('currentUser:', currentUser);
         if (currentUser) {
           console.log('Found in users collection:', currentUser);
-          res.redirect(currentUser.urls[0].url);
+          if (currentUser.urls.length > 0) {
+            res.redirect(currentUser.urls[0].url);
+          } else {
+            req.flash('danger', 'URL not found');
+            res.redirect('/');
+          }
         } else {
           console.log('url not found! Searching outside users collection.');
           Url.findOne({
@@ -135,5 +141,6 @@ module.exports = (app) => {
         }
       });
     }
+    // }
   });
 };
