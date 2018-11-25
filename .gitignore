@@ -1,9 +1,5 @@
-# secret keys
+# Secret keys
 config/keys.js
-
-# for heroku
-Procfile
-.travis.yml
 
 # Logs
 logs
@@ -63,4 +59,3 @@ typings/
 
 # dotenv environment variables file
 .env
-
