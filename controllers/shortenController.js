@@ -1,68 +1,139 @@
 const mongoose = require('mongoose');
+const Url = require('../models/url-model');
+const User = require('../models/user-model');
 
-var urls = [];
+// var urls = [];
 
+// function to generate random 5 digit id for urls
 function makeid() {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
   for (var i = 0; i < 5; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
-
   return text;
 }
 
-// Connect to mLab database
-mongoose.connect('mongodb://a:a@ds263408.mlab.com:63408/codeshala');
-
-// Database Setup
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-
-db.once('open', function() {
-  // we're connected!
-  console.log("Connected To MongoLab Cloud Database :p");
-});
-
-// Schema Setup
-var urlSchema = mongoose.Schema({
-  url: String,
-  key: String
-});
-
-// Model Setup
-var Url = mongoose.model('Url', urlSchema);
-
-module.exports = function shorten(app) {
-  app.post('/shorten', function (req, res) {
+module.exports = (app) => {
+  // route for shorten using post method
+  app.post('/shorten', (req, res) => {
+    const user = req.user;
     var url = req.body.url;
     var key = req.body.key;
-    if(key === ''){
+    if (key === '') {
       key = makeid();
     }
-    var newUrl = new Url({url: url, key: key});
-    console.log(newUrl.url+'\n '+newUrl.key+'\n ');
 
-    newUrl.save(function (err, e) {
-      if(err) return console.error(err);
-      console.log('Url created!');
+    // create new mongodb document
+    var newUrl = new Url({
+      url: url,
+      key: key
     });
-    res.render('index', {data: 'https://urll.herokuapp.com/' + key});
+    console.log('New url being created:\nurl:', newUrl.url + '\nkey:', newUrl.key + '\n ');
+
+    // save to user's url in users collection array if user is logged in
+    if (user) {
+      console.log('updating current user', user);
+      User.findOne({
+        _id: user._id
+      }).then((user) => {
+        console.log('found user ', user);
+      });
+
+      User.updateOne({
+        _id: user._id
+      }, {
+        $push: {
+          urls: newUrl
+        }
+      }).then((updateDetails) => {
+        // redirect to homepage with shorted url
+        console.log(updateDetails);
+        // find user to get url list
+        User.findOne({
+          _id: user._id
+        }).then((currentUser) => {
+          res.render('index', {
+            data: 'https://urll.herokuapp.com/' + key,
+            user: user,
+            urlList: currentUser.urls
+          });
+        });
+      });
+    }
+    // else save to urls collection
+    else {
+      newUrl.save().then((usr) => {
+        console.log('Url created!');
+
+        // redirect to homepage with shorted url
+        res.render('index', {
+          data: 'https://urll.herokuapp.com/' + key,
+          user: usr,
+          urlList: null
+        });
+      });
+    }
   });
 
-  app.get('/shorten', function (req, res){
+
+  // route for shorten using post method
+  app.get('/shorten', (req, res) => {
     res.redirect('/');
   });
 
-  app.get('/:key', function (req, res) {
-    Url.findOne({key: req.params.key}, function (err, url) {
-      if(err){
-        console.log('error: ' + err);
-      }
-      if(url !== null){
-        console.log(url);
-        res.redirect(url.url);
-      }
-    });
+
+  // redirect to shorted url
+  app.get('/:key', (req, res) => {
+    const user = req.user;
+    // if user is logged in, search in current user's urls
+    if (user) {
+      // search user by id
+      User.findOne({
+        _id: user._id
+      }).select({
+        urls: {
+          $elemMatch: {
+            key: req.params.key
+          }
+        }
+      }).then((currentUser) => {
+        console.log('currentUser:', currentUser);
+        if (currentUser) {
+          console.log('Found in users collection:', currentUser);
+          res.redirect(currentUser.urls[0].url);
+        } else {
+          console.log('url not found! Searching outside users collection.');
+          Url.findOne({
+            key: req.params.key
+          }, (err, url) => {
+            if (err) {
+              console.log('error: ' + err);
+            }
+            if (url !== null) {
+              console.log(url);
+              res.redirect(url.url);
+            } else {
+              res.send('not found!');
+            }
+          });
+        }
+      });
+    }
+    // then search for other urls
+    else {
+      Url.findOne({
+        key: req.params.key
+      }, (err, url) => {
+        if (err) {
+          console.log('error: ' + err);
+        }
+        if (url !== null) {
+          console.log(url);
+          res.redirect(url.url);
+        } else {
+          res.send('not found!');
+        }
+      });
+    }
   });
 };

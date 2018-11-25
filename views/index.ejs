@@ -9,7 +9,10 @@
     <link rel="stylesheet" href="style.css">
     <title>URL Shortener</title>
   </head>
-  <body class="container" align="center">
+
+<body align="center">
+  <%- include('navbar') -%>
+  <div class="main container">
     <h1 class="text-center heading display-4 mb-4">Shorten your URL</h1>
 
     <form id="shortUrlCreatorForm" method="post" action="/shorten">
@@ -34,10 +37,33 @@
       </div>
     </form>
 
+    <!-- show shorted url -->
     <% if(data){ %>
       <h6>Shorted Url:</h6>
       <div class="result p-2 border rounded border-success"><a href="<%= data %>"><%= data %></a></div>
     <% } %>
+
+    <!-- show already shorted urls if logged in -->
+    <% if(urlList) { console.log('urlList: ', urlList[0]) %>
+      <div class="saved-urls">
+        <h1 class="h3">Saved URLs</h1>
+          <ul>
+            <% for(var i=0; i < urlList.length; ++i){ %>
+              <li><a href="<%= urlList[i].url %>">
+              <h5><%= urlList[i].key %></h5>
+              <p><%= urlList[i].url %></p></a>
+            </li>
+            <% } %>
+          </ul>
+      </div>
+    <% } %>
+
+
+
+
+
+
+  </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -45,5 +71,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <!-- <script src="./init.js"></script> -->
-  </body>
+</body>
 </html>
