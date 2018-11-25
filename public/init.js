@@ -1,5 +1,5 @@
-$(document).ready(function() {
-  $('#shortUrlCreatorForm').submit(function(e) {
+$(document).ready(function () {
+  $('#shortUrlCreatorForm').submit(function (e) {
     e.preventDefault();
     var u = $('#url').val();
     var k = $('#key').val();
@@ -12,14 +12,14 @@ $(document).ready(function() {
           key: k
         }
       })
-      .done(function() {
+      .done(function () {
         console.log("success");
         $('.result').html = 'success!';
       })
-      .fail(function() {
+      .fail(function () {
         console.log("error");
       })
-      .always(function() {
+      .always(function () {
         console.log("complete");
       })
   });

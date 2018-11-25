@@ -24,13 +24,14 @@ passport.use(
     console.log('passport cb function fired.');
     console.log(profile);
 
-    User.findOne({googleID: profile.id}).then((currentUser) => {
+    User.findOne({
+      googleID: profile.id
+    }).then((currentUser) => {
       console.log(currentUser);
-      if(currentUser){
+      if (currentUser) {
         console.log('found user: ', currentUser);
         done(null, currentUser);
-      }
-      else{
+      } else {
         console.log('user not found!');
         new User({
           username: profile.displayName,
