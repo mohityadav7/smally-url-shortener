@@ -1,3 +1,10 @@
+# secret keys
+config/keys.js
+
+# for heroku
+Procfile
+.travis.yml
+
 # Logs
 logs
 *.log
