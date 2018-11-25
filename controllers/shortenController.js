@@ -45,9 +45,9 @@ module.exports = (app) => {
         $push: {
           urls: newUrl
         }
-      }).then((updateDetails) => {
+      }).then((updatedDetails) => {
         // redirect to homepage with shorted url
-        console.log(updateDetails);
+        console.log(updatedDetails);
         // find user to get url list
         User.findOne({
           _id: user._id
@@ -62,13 +62,13 @@ module.exports = (app) => {
     }
     // else save to urls collection
     else {
-      newUrl.save().then((usr) => {
-        console.log('Url created!');
+      newUrl.save().then((url) => {
+        console.log('Url created: ' + url);
 
         // redirect to homepage with shorted url
         res.render('index', {
           data: 'https://urll.herokuapp.com/' + key,
-          user: usr,
+          user: null,
           urlList: null
         });
       });

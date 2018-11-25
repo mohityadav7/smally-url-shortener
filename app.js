@@ -52,7 +52,7 @@ db.once('open', () => {
 // fire controllers
 authController(app);
 shortenController(app);
-userController(app);
+// userController(app);
 
 
 // routes
@@ -74,7 +74,7 @@ app.get('/', (req, res) => {
     console.log('User not logged in -> not showing url list. [index.js]');
     res.render('index', {
       data: '',
-      user: req.user,
+      user: null,
       urlList: null
     });
   }

@@ -12,11 +12,7 @@ module.exports = (app) => {
   // auth logout
   app.get('/auth/logout', (req, res) => {
     req.logout();
-    res.render('index', {
-      data: '',
-      user: req.user,
-      urlList: null
-    });
+    res.redirect('/');
   });
 
   // auth with google
@@ -33,11 +29,7 @@ module.exports = (app) => {
       User.findOne({
         _id: req.user._id
       }).then((user) => {
-        res.render('index', {
-          data: '',
-          user: req.user,
-          urlList: user.urls
-        });
+        res.redirect('/');
       });
     } else {
       console.log('User not logged in -> not showing url list. [authController.js]');
