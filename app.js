@@ -12,6 +12,7 @@ const User = require('./models/user-model');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const qr = require('qr-image');
 
 // set up app
 const app = express();
@@ -70,7 +71,8 @@ app.use(function (req, res, next) {
 });
 
 app.get('/', (req, res) => {
-  console.log(req.user);
+  // console.log(req.user);
+  console.log('Came here');
   if (req.user) {
     User.findOne({
       _id: req.user._id
@@ -78,7 +80,8 @@ app.get('/', (req, res) => {
       res.render('index', {
         data: '',
         user: req.user,
-        urlList: user.urls
+        urlList: user.urls,
+        svg: false
       });
     });
   } else {
@@ -86,10 +89,21 @@ app.get('/', (req, res) => {
     res.render('index', {
       data: '',
       user: null,
-      urlList: null
+      urlList: null,
+      svg: false
     });
   }
 });
+
+// app.get('/qr', (req, res) => {
+//   const temp = require('fs').createWriteStream('./qr.svg');
+//   qr.image('text', {
+//     type: 'svg'
+//   }).pipe(temp);
+//   res.render('index.ejs', {
+//     svg: true
+//   });
+// });
 
 // fire controllers
 authController(app);

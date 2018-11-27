@@ -1,6 +1,9 @@
 # Secret keys
 config/keys.js
 
+# TODO file
+TODO
+
 # Logs
 logs
 *.log

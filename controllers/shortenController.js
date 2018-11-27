@@ -1,8 +1,15 @@
 const mongoose = require('mongoose');
 const Url = require('../models/url-model');
 const User = require('../models/user-model');
+const qr = require('qr-image');
 
-// var urls = [];
+// function generateQRCode(url, type) {
+//   qrPath = './public/qr-' + type + '.svg';
+//   const qrPath = require('fs').createWriteStream('./public/qr-unshorted.svg');
+//   qr.image(url, {
+//     type: 'svg'
+//   }).pipe(qrPath);
+// }
 
 // function to generate random 5 digit id for urls
 function makeid() {
@@ -47,29 +54,57 @@ module.exports = (app) => {
         }
       }).then((updatedDetails) => {
         // redirect to homepage with shorted url
-        console.log(updatedDetails);
+        console.log('Updated details: ' + updatedDetails);
         // find user to get url list
         User.findOne({
           _id: user._id
         }).then((currentUser) => {
+          var shortedUrl = 'https://urll.herokuapp.com/' + key;
+
+          // generate qr codes of original link and shorted link
+          qrPath = require('fs').createWriteStream('./public/qr-unshorted.svg');
+          qr.image(url, {
+            type: 'svg'
+          }).pipe(qrPath);
+
+          qrPath = require('fs').createWriteStream('./public/qr-shorted.svg');
+          qr.image(shortedUrl, {
+            type: 'svg'
+          }).pipe(qrPath);
+
           res.render('index', {
-            data: 'https://urll.herokuapp.com/' + key,
+            data: shortedUrl,
             user: user,
-            urlList: currentUser.urls
+            urlList: currentUser.urls,
+            svg: true
           });
         });
       });
     }
     // else save to urls collection
     else {
-      newUrl.save().then((url) => {
-        console.log('Url created: ' + url);
+      newUrl.save().then((savedUrl) => {
+        var shortedUrl = 'https://urll.herokuapp.com/' + savedUrl.key;
+        console.log('Url created: ' + shortedUrl);
+        console.log(savedUrl);
+
+        // generate qr codes of original link and shorted link
+        qrPath = require('fs').createWriteStream('./public/qr-unshorted.svg');
+        qr.image(savedUrl.url, {
+          type: 'svg'
+        }).pipe(qrPath);
+
+        qrPath = require('fs').createWriteStream('./public/qr-shorted.svg');
+        qr.image(shortedUrl, {
+          type: 'svg'
+        }).pipe(qrPath);
 
         // redirect to homepage with shorted url
         res.render('index', {
-          data: 'https://urll.herokuapp.com/' + key,
+          data: shortedUrl,
           user: null,
-          urlList: null
+          urlList: null,
+          svg: true
         });
       });
     }
@@ -88,6 +123,7 @@ module.exports = (app) => {
     // if user is logged in, search in current user's urls
     // if (req.params.key != '') {
     if (user) {
+      console.log('User exist: ' + user);
       // search user by id
       User.findOne({
         _id: user._id
@@ -127,6 +163,7 @@ module.exports = (app) => {
     }
     // then search for other urls
     else {
+      console.log('User not found.');
       Url.findOne({
         key: req.params.key
       }, (err, url) => {
