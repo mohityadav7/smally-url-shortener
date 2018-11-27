@@ -54,6 +54,14 @@
     </div>
     <% } %>
 
+    <% if(svg) { %>
+    <h6>QR Code (Unshorted):</h6>
+    <img src="qr-unshorted.svg" alt="qr code" height="150px">
+
+    <h6>QR Code (Shorted):</h6>
+    <img src="qr-shorted.svg" alt="qr code" height="150px">
+    <% } %>
+
     <!-- show already shorted urls if logged in -->
     <% if(urlList) { console.log('urlList: ', urlList[0]) %>
     <div class="saved-urls">
