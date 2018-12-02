@@ -1,0 +1,28 @@
+body {
+    color: #ddd;
+}
+
+input[type="text"] {
+    background-color: #444444aa !important;
+    color: #ddd !important;
+}
+
+/* #shortUrlCreatorForm {
+    background-color: #33333355;
+} */
+
+.bg-light-dark {
+    background-color: #333 !important;
+}
+
+.bg-lighter-dark {
+    background-color: #444 !important;
+}
+
+.shadow-dark {
+    box-shadow: 2px 2px 20px #000;
+}
+
+.shadow-light {
+    box-shadow: 2px 2px 20px #111;
+}

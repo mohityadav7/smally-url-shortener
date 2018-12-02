@@ -2,19 +2,38 @@ body {
   background-color: 2d2d2d;
 }
 
-.result {
-  background-color: #ddffdd;
-}
-
-.result a,
-.result:hover,
-.result:visited {
-  color: #333;
+a,
+a:hover {
+  color: #ddd;
   text-decoration: none;
 }
 
-.heading {
-  color: #17a2b8;
+a.url:hover {
+  color: rgb(33, 150, 243);
+  text-decoration: none;
+  border-bottom: 1px dotted rgb(33, 150, 243);
+}
+
+a.result,
+a.result:visited {
+  text-decoration: none !important;
+  color: #27e8a7;
+  font-size: 1.2rem;
+}
+
+a.result:hover {
+  color: rgb(33, 150, 243);
+  border-bottom: 1px dotted rgb(33, 150, 243);
+}
+
+.header-text {
+  color: #27e8a7;
+  font-size: 2rem;
+}
+
+.recent-heading {
+  color: #27e8a7;
+  font-size: 1.5rem;
 }
 
 .loginBtn {
@@ -64,4 +83,15 @@ body {
 .loginBtn--google:hover,
 .loginBtn--google:focus {
   background: #E74B37;
+}
+
+@media screen and (max-width: 768px) {
+  #shortUrlCreatorForm {
+    padding: 25px 15px !important;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+  }
 }

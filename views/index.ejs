@@ -2,96 +2,106 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-    crossorigin="anonymous" />
-  <link rel="stylesheet" href="style.css" />
-  <title>URL Shortener</title>
+	<%- include('partials/head') -%>
+	<title>URL Shortener</title>
 </head>
 
 <body align="center">
-  <%- include('navbar') -%>
-  <div class="main container">
-    <%- messages('my_message_template', locals) %>
-    <h1 class="text-center heading display-4 mb-4">Shorten your URL</h1>
+	<%- include('partials/navbar') -%>
+	<div class="main container">
+		<%- messages('my_message_template', locals) %>
+		<h1 class="text-center header-text my-4">Shorten your URL</h1>
 
-    <form id="shortUrlCreatorForm" method="post" action="/shorten">
-      <div class="form-row align-items-center">
-        <div class="col-md-12">
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">URL</div>
-            </div>
-            <input type="text" name="url" class="form-control" id="url" placeholder="URL (complete)" />
-          </div>
+		<form id="shortUrlCreatorForm" class="my-3 p-5 shadow-dark bg-light" method="post" action="/shorten">
+			<div class="form-row align-items-center">
+				<div class="col-md-12">
 
-          <div class="input-group mb-2">
-            <div class="input-group-prepend">
-              <div class="input-group-text">urll.herokuapp.com/</div>
-            </div>
-            <input type="text" name="key" class="form-control" id="key" placeholder="(Optional)" />
-          </div>
-        </div>
+					<div class="input-group my-4">
+						<div class="input-group-prepend">
+							<div class="input-group-text">URL</div>
+						</div>
+						<input type="text" name="url" class="form-control py-4" id="url" placeholder="https://www.example.com" required />
+					</div>
 
-        <div class="col-md-12">
-          <input type="submit" value="Shorten" class="d-block mx-auto btn btn-info mb-2" />
-          <!--
-              <button type="submit" id="short" class="d-block mx-auto btn btn-primary mb-2">Shorten</button>
-            -->
-        </div>
-      </div>
-    </form>
+					<div class="input-group my-4">
+						<div class="input-group-prepend">
+							<div class="input-group-text">urll.herokuapp.com/</div>
+						</div>
+						<input type="text" name="key" class="form-control py-4" id="key" placeholder="(Optional key)" />
+					</div>
+				</div>
 
-    <!-- show shorted url -->
-    <% if(data){ %>
-    <h6>Shorted Url:</h6>
-    <div class="result p-2 border rounded border-success">
-      <a href="<%= data %>">
-        <%= data %></a>
-    </div>
-    <% } %>
+				<div class="col-md-12 mt-2 mb-2">
+					<input type="submit" value="Shorten" class="d-block mx-auto btn btn-secondary py-2 px-5" />
+				</div>
+			</div>
+		</form>
 
-    <% if(svg) { %>
-    <h6>QR Code (Unshorted):</h6>
-    <img src="qr-unshorted.svg" alt="qr code" height="150px">
+		<!-- show shorted url -->
+		<% if(data){ %>
+		<div class="p-4 mt-5 bg-light-dark">
+			<h6>Shorted Url:</h6>
+			<div class="result-container p-2">
+				<a class="result" href="<%= data %>">
+					<%= data %></a>
+			</div>
+			<button class="btn btn-secondary mt-1">Get QR Code</button>
+		</div>
+		<% } %>
 
-    <h6>QR Code (Shorted):</h6>
-    <img src="qr-shorted.svg" alt="qr code" height="150px">
-    <% } %>
+		<% if(svg) { %>
+		<div class="row no-gutters my-5 bg-light-dark rounded">
+			<div class="col-md-6 p-4">
+				<h6 class="text-center">QR Code (Unshorted):</h6>
+				<img class="mx-auto d-block mt-4" src="qr-unshorted.svg" alt="qr code" height="150px">
+			</div>
+			<div class="col-md-6 p-4">
+				<h6 class="text-center">QR Code (Shorted):</h6>
+				<img class="mx-auto d-block mt-4" src="qr-shorted.svg" alt="qr code" height="150px">
+			</div>
+		</div>
+		<% } %>
 
-    <!-- show already shorted urls if logged in -->
-    <% if(urlList) { console.log('urlList: ', urlList[0]) %>
-    <div class="saved-urls">
-      <h1 class="h3">Saved URLs</h1>
-      <ul>
-        <% for(var i=0; i < urlList.length; ++i){ %>
-        <li>
-          <a href="<%= urlList[i].url %>">
-            <h5>
-              <%= urlList[i].key %>
-            </h5>
-            <p>
-              <%= urlList[i].url %>
-            </p>
-          </a>
-        </li>
-        <% } %>
-      </ul>
-    </div>
-    <% } %>
-  </div>
+		<!-- show already shorted urls if logged in -->
+		<% if(urlList) { %>
+		<table class="table table-light shadow-dark my-5">
+			<thead>
+				<tr>
+					<th colspan="4" class="recent-heading">Recently shortened links:</th>
+				</tr>
+			</thead>
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Original URL</th>
+					<th scope="col">Short URL</th>
+					<th scope="col">QR-Code</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% for(var i=0; i < urlList.length; ++i){
+					var originalURL = urlList[i].url;
+					var shortedURL = "urll.herokuapp.com/" + urlList[i].key;
+				%>
+				<tr class="px-3">
+					<td>
+						<%= i+1 %>
+					</td>
+					<td>
+						<a class="url" href="<%= originalURL %>">
+							<%= originalURL %></a></td>
+					<td>
+						<a class="url" href="<%= shortedURL %>">
+							<%= shortedURL %></a></td>
+					<td>NA</td>
+				</tr>
+				<% } %>
+			</tbody>
+		</table>
+		<% } %>
+	</div> <!-- container -->
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
-  <!-- <script src="./init.js"></script> -->
+	<%- include('partials/footer') -%>
 </body>
 
 </html>

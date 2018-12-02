@@ -2,14 +2,7 @@ const mongoose = require('mongoose');
 const Url = require('../models/url-model');
 const User = require('../models/user-model');
 const qr = require('qr-image');
-
-// function generateQRCode(url, type) {
-//   qrPath = './public/qr-' + type + '.svg';
-//   const qrPath = require('fs').createWriteStream('./public/qr-unshorted.svg');
-//   qr.image(url, {
-//     type: 'svg'
-//   }).pipe(qrPath);
-// }
+const fs = require('fs');
 
 // function to generate random 5 digit id for urls
 function makeid() {
@@ -62,15 +55,13 @@ module.exports = (app) => {
           var shortedUrl = 'https://urll.herokuapp.com/' + key;
 
           // generate qr codes of original link and shorted link
-          qrPath = require('fs').createWriteStream('./public/qr-unshorted.svg');
           qr.image(url, {
             type: 'svg'
-          }).pipe(qrPath);
+          }).pipe(fs.createWriteStream('./public/qr-unshorted.svg'));
 
-          qrPath = require('fs').createWriteStream('./public/qr-shorted.svg');
           qr.image(shortedUrl, {
             type: 'svg'
-          }).pipe(qrPath);
+          }).pipe(fs.createWriteStream('./public/qr-shorted.svg'));
 
           res.render('index', {
             data: shortedUrl,
@@ -89,15 +80,13 @@ module.exports = (app) => {
         console.log(savedUrl);
 
         // generate qr codes of original link and shorted link
-        qrPath = require('fs').createWriteStream('./public/qr-unshorted.svg');
         qr.image(savedUrl.url, {
           type: 'svg'
-        }).pipe(qrPath);
+        }).pipe(fs.createWriteStream('./public/qr-unshorted.svg'));
 
-        qrPath = require('fs').createWriteStream('./public/qr-shorted.svg');
         qr.image(shortedUrl, {
           type: 'svg'
-        }).pipe(qrPath);
+        }).pipe(fs.createWriteStream('./public/qr-shorted.svg'));
 
         // redirect to homepage with shorted url
         res.render('index', {
@@ -120,64 +109,66 @@ module.exports = (app) => {
   // redirect to shorted url
   app.get('/:key', (req, res) => {
     const user = req.user;
-    // if user is logged in, search in current user's urls
-    // if (req.params.key != '') {
-    if (user) {
-      console.log('User exist: ' + user);
-      // search user by id
-      User.findOne({
-        _id: user._id
-      }).select({
-        urls: {
-          $elemMatch: {
-            key: req.params.key
-          }
-        }
-      }).then((currentUser) => {
-        console.log('currentUser:', currentUser);
-        if (currentUser) {
-          console.log('Found in users collection:', currentUser);
-          if (currentUser.urls.length > 0) {
-            res.redirect(currentUser.urls[0].url);
-          } else {
-            req.flash('danger', 'URL not found');
-            res.redirect('/');
-          }
-        } else {
-          console.log('url not found! Searching outside users collection.');
-          Url.findOne({
-            key: req.params.key
-          }, (err, url) => {
-            if (err) {
-              console.log('error: ' + err);
+    const key = req.params.key;
+
+    if (key != 'favicon.ico' && key != 'robots.txt') {
+      // if user is logged in, search in current user's urls
+      if (user) {
+        console.log('User exist: ' + user);
+        // search user by id
+        User.findOne({
+          _id: user._id
+        }).select({
+          urls: {
+            $elemMatch: {
+              key: req.params.key
             }
-            if (url !== null) {
-              console.log(url);
-              res.redirect(url.url);
+          }
+        }).then((currentUser) => {
+          console.log('currentUser:', currentUser);
+          if (currentUser) {
+            console.log('Found in users collection:', currentUser);
+            if (currentUser.urls.length > 0) {
+              res.redirect(currentUser.urls[0].url);
             } else {
-              res.send('not found!');
+              req.flash('danger', 'URL not found with key ' + req.params.key);
+              res.redirect('/');
             }
-          });
-        }
-      });
+          } else {
+            console.log('url not found! Searching outside users collection.');
+            Url.findOne({
+              key: req.params.key
+            }, (err, url) => {
+              if (err) {
+                console.log('error: ' + err);
+              }
+              if (url !== null) {
+                console.log(url);
+                res.redirect(url.url);
+              } else {
+                res.send('not found!');
+              }
+            });
+          }
+        });
+      }
+      // then search for other urls
+      else {
+        console.log('User not found.');
+        Url.findOne({
+          key: req.params.key
+        }, (err, url) => {
+          if (err) {
+            console.log('error: ' + err);
+          }
+          if (url !== null) {
+            console.log(url);
+            res.redirect(url.url);
+          } else {
+            res.send('not found!');
+          }
+        });
+      }
     }
-    // then search for other urls
-    else {
-      console.log('User not found.');
-      Url.findOne({
-        key: req.params.key
-      }, (err, url) => {
-        if (err) {
-          console.log('error: ' + err);
-        }
-        if (url !== null) {
-          console.log(url);
-          res.redirect(url.url);
-        } else {
-          res.send('not found!');
-        }
-      });
-    }
-    // }
   });
 };
