@@ -14,10 +14,10 @@
         <!-- show if user is not logged in -->
         <% if(!user){ %>
         <li class="nav-item">
-          <a class="nav-link" href="/auth/google">Login with Google</a>
+          <a onclick="switchTheme()" class="nav-link themeSwitcher" href="#">Switch Theme</a>
         </li>
         <li class="nav-item">
-          <a onclick="switchTheme()" class="nav-link themeSwitcher" href="#">Switch Theme</a>
+          <a class="nav-link" href="/auth/google">Login with Google</a>
         </li>
         <% } %>
 

@@ -1,3 +1,8 @@
+// auto close bootstrap navbar on clicking navbar link
+$('.navbar-nav>li>a').on('click', function () {
+    $('.navbar-collapse').collapse('hide');
+});
+
 // switch stylesheets and save theme in using cookies
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -27,17 +32,17 @@ function applyDarkTheme(darksheet, lightsheet, darkly, minty) {
     lightsheet.disabled = true;
     darkly.disabled = false;
     minty.disabled = true;
-    // themeSheet.href = "https://bootswatch.com/4/darkly/bootstrap.min.css";
     setCookie("theme", 'dark', 90);
+    $('meta[name=theme-color]').attr('content', '#222');
 }
 
 function applyLightTheme(darksheet, lightsheet, darkly, minty) {
     lightsheet.disabled = false;
     darksheet.disabled = true;
-    // themeSheet.href = "https://bootswatch.com/4/minty/bootstrap.min.css";
     minty.disabled = false;
     darkly.disabled = true;
     setCookie("theme", 'light', 90);
+    $('meta[name=theme-color]').attr('content', '#fff');
 }
 
 function switchTheme() {
