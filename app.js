@@ -5,6 +5,7 @@ const passport = require('passport');
 const shortenController = require('./controllers/shortenController');
 // const userController = require('./controllers/userController');
 const authController = require('./controllers/authController');
+const qrController = require('./controllers/qrController');
 const passportSetup = require('./config/passport-setup');
 const keys = require('./config/keys');
 const cookieSession = require('cookie-session');
@@ -70,9 +71,14 @@ app.use(function (req, res, next) {
   next();
 });
 
+
+// fire controllers
+// fire qrController before shortenController
+authController(app);
+qrController(app);
+shortenController(app);
+
 app.get('/', (req, res) => {
-  // console.log(req.user);
-  console.log('Came here');
   if (req.user) {
     User.findOne({
       _id: req.user._id
@@ -81,7 +87,8 @@ app.get('/', (req, res) => {
         data: '',
         user: req.user,
         urlList: user.urls,
-        svg: false
+        svg: false,
+        originalUrl: null
       });
     });
   } else {
@@ -90,7 +97,8 @@ app.get('/', (req, res) => {
       data: '',
       user: null,
       urlList: null,
-      svg: false
+      svg: false,
+      originalUrl: null
     });
   }
 });
@@ -105,9 +113,6 @@ app.get('/', (req, res) => {
 //   });
 // });
 
-// fire controllers
-authController(app);
-shortenController(app);
 
 app.get('/*', (req, res) => {
   res.send('404 | Page not found!');

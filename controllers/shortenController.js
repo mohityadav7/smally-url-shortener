@@ -67,6 +67,7 @@ module.exports = (app) => {
             data: shortedUrl,
             user: user,
             urlList: currentUser.urls,
+            originalUrl: url,
             svg: true
           });
         });
@@ -76,6 +77,7 @@ module.exports = (app) => {
     else {
       newUrl.save().then((savedUrl) => {
         var shortedUrl = 'https://urll.herokuapp.com/' + savedUrl.key;
+        var unshortedUrl = savedUrl.url;
         console.log('Url created: ' + shortedUrl);
         console.log(savedUrl);
 
@@ -91,6 +93,7 @@ module.exports = (app) => {
         // redirect to homepage with shorted url
         res.render('index', {
           data: shortedUrl,
+          originalUrl: unshortedUrl,
           user: null,
           urlList: null,
           svg: true

@@ -38,32 +38,33 @@
 		</form>
 
 		<!-- show shorted url -->
+		<%- include('partials/qr-modal') -%>
 		<% if(data){ %>
 		<div class="p-4 mt-5 bg-light-dark">
 			<h6>Shorted Url:</h6>
-			<div class="result-container p-2">
-				<a class="result" href="<%= data %>">
+			<div class="result-container py-2">
+				<a class="result" id="result" href="<%= data %>">
 					<%= data %></a>
 			</div>
-			<button class="btn btn-secondary mt-1">Get QR Code</button>
+			<!-- button to copy link to clipboard -->
+			<button id="copyButton" onclick="copyToClipBoard()" class="btn btn-secondary mt-1">Copy</button>
+			<!-- Button trigger modal -->
+			<button id="getQRCodeButton" class="btn btn-secondary mt-1" data-toggle="modal" data-target="#qr-modal">Get QR Code</button>
 		</div>
 		<% } %>
 
-		<% if(svg) { %>
-		<div class="row no-gutters my-5 bg-light-dark rounded">
-			<div class="col-md-6 p-4">
-				<h6 class="text-center">QR Code (Unshorted):</h6>
-				<img class="mx-auto d-block mt-4" src="qr-unshorted.svg" alt="qr code" height="150px">
-			</div>
-			<div class="col-md-6 p-4">
-				<h6 class="text-center">QR Code (Shorted):</h6>
-				<img class="mx-auto d-block mt-4" src="qr-shorted.svg" alt="qr code" height="150px">
+		<% if(originalUrl){ %>
+		<div class="p-4 mt-3 bg-light-dark">
+			<h6>Original Url:</h6>
+			<div class="originalUrlContainer py-2">
+				<a id="originalUrl" class="my-2" href="<%= originalUrl %>">
+					<%= originalUrl %></a>
 			</div>
 		</div>
 		<% } %>
 
 		<!-- show already shorted urls if logged in -->
-		<% if(urlList) { %>
+		<% if(urlList && urlList.length > 0) { %>
 		<table class="table table-light shadow-dark my-5">
 			<thead>
 				<tr>
@@ -79,7 +80,9 @@
 				</tr>
 			</thead>
 			<tbody>
-				<% for(var i=0; i < urlList.length; ++i){
+				<%
+					urlList = urlList.reverse();
+					for(var i=0; i < urlList.length; ++i){
 					var originalURL = urlList[i].url;
 					var shortedURL = "urll.herokuapp.com/" + urlList[i].key;
 				%>
@@ -93,7 +96,9 @@
 					<td>
 						<a class="url" href="<%= shortedURL %>">
 							<%= shortedURL %></a></td>
-					<td>NA</td>
+					<td>
+						<button class="viewQRCodeButton btn btn-secondary mt-1" data-toggle="modal" data-target="#qr-modal">View</button>
+					</td>
 				</tr>
 				<% } %>
 			</tbody>

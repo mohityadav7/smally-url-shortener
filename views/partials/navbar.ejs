@@ -17,25 +17,38 @@
           <a class="nav-link" href="/auth/google">Login with Google</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Switch Theme (NA)</a>
+          <a onclick="switchTheme()" class="nav-link themeSwitcher" href="#">Switch Theme (NA)</a>
         </li>
         <% } %>
 
         <!-- show if user is logged in -->
         <% if(user){ %>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown hide-below-992 show-above-992">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             <%= user.username %>
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Switch Theme</a>
+            <a onclick="switchTheme()" class="dropdown-item themeSwitcher" href="#">Switch Theme</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/auth/logout">Logout</a>
           </div>
         </li>
-        <% } %>
-      </ul>
+
+        <li class="nav-item show-below-992 hide-above-992 mt-3">
+          <a class="nav-link" href="#">
+            <%= user.username %>
+          </a>
+        </li>
+        <li class="nav-item show-below-992 hide-above-992">
+          <a onclick="switchTheme()" class="nav-link themeSwitcher" href="#">Switch Theme</a>
+        </li>
+        <li class="nav-item show-below-992 hide-above-992">
+          <a class="nav-link" href="/auth/logout">Logout</a>
+        </li>
     </div>
+    <% } %>
+    </ul>
+  </div>
   </div>
 </nav>
