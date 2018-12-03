@@ -78,6 +78,7 @@ authController(app);
 qrController(app);
 shortenController(app);
 
+
 app.get('/', (req, res) => {
   if (req.user) {
     User.findOne({
@@ -87,7 +88,6 @@ app.get('/', (req, res) => {
         data: '',
         user: req.user,
         urlList: user.urls,
-        svg: false,
         originalUrl: null
       });
     });
@@ -97,21 +97,10 @@ app.get('/', (req, res) => {
       data: '',
       user: null,
       urlList: null,
-      svg: false,
       originalUrl: null
     });
   }
 });
-
-// app.get('/qr', (req, res) => {
-//   const temp = require('fs').createWriteStream('./qr.svg');
-//   qr.image('text', {
-//     type: 'svg'
-//   }).pipe(temp);
-//   res.render('index.ejs', {
-//     svg: true
-//   });
-// });
 
 
 app.get('/*', (req, res) => {

@@ -13,11 +13,14 @@ function makeid() {
   return text;
 }
 
+
 module.exports = (app) => {
   // route for shorten using post method
   app.post('/shorten', (req, res) => {
     const user = req.user;
     var url = req.body.url;
+    var private = req.body.private;
+    console.log('private: ' + private);
     var key = req.body.key;
     if (key === '') {
       key = makeid();
@@ -30,13 +33,23 @@ module.exports = (app) => {
     });
     console.log('New url being created:\nurl:', newUrl.url + '\nkey:', newUrl.key + '\n ');
 
-    // save to user's url in users collection array if user is logged in
+
+    // user is logged in *****************************************************************************
+    // ***********************************************************************************************
     if (user) {
-      console.log('updating current user', user);
+      if (!private) {
+        // save to public urls if url is not private
+        newUrl.save().then((savedUrl) => {
+          console.log(savedUrl);
+        });
+      }
+
+      // save to user's urls in users collection array if user is logged in
+      console.log('updating current user: ', user.username);
       User.findOne({
         _id: user._id
       }).then((user) => {
-        console.log('found user ', user);
+        console.log('found user: ', user.username);
       });
 
       User.updateOne({
@@ -52,28 +65,21 @@ module.exports = (app) => {
         User.findOne({
           _id: user._id
         }).then((currentUser) => {
+          var urlList = currentUser.urls;
           var shortedUrl = 'https://urll.herokuapp.com/' + key;
-
-          // generate qr codes of original link and shorted link
-          qr.image(url, {
-            type: 'svg'
-          }).pipe(fs.createWriteStream('./public/qr-unshorted.svg'));
-
-          qr.image(shortedUrl, {
-            type: 'svg'
-          }).pipe(fs.createWriteStream('./public/qr-shorted.svg'));
 
           res.render('index', {
             data: shortedUrl,
-            user: user,
-            urlList: currentUser.urls,
             originalUrl: url,
-            svg: true
+            user: user,
+            urlList: urlList
           });
         });
       });
     }
-    // else save to urls collection
+
+    // else if user is not logged in ****************************************************
+    // else save to urls collection *****************************************************
     else {
       newUrl.save().then((savedUrl) => {
         var shortedUrl = 'https://urll.herokuapp.com/' + savedUrl.key;
@@ -81,22 +87,12 @@ module.exports = (app) => {
         console.log('Url created: ' + shortedUrl);
         console.log(savedUrl);
 
-        // generate qr codes of original link and shorted link
-        qr.image(savedUrl.url, {
-          type: 'svg'
-        }).pipe(fs.createWriteStream('./public/qr-unshorted.svg'));
-
-        qr.image(shortedUrl, {
-          type: 'svg'
-        }).pipe(fs.createWriteStream('./public/qr-shorted.svg'));
-
         // redirect to homepage with shorted url
         res.render('index', {
           data: shortedUrl,
           originalUrl: unshortedUrl,
           user: null,
-          urlList: null,
-          svg: true
+          urlList: null
         });
       });
     }
@@ -109,7 +105,8 @@ module.exports = (app) => {
   });
 
 
-  // redirect to shorted url
+  // redirect to shorted url **************************************************************
+  // **************************************************************************************
   app.get('/:key', (req, res) => {
     const user = req.user;
     const key = req.params.key;
