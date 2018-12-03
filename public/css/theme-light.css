@@ -1,0 +1,24 @@
+body {
+    color: #777;
+}
+
+a,
+a:hover {
+    color: #777;
+}
+
+.bg-light-dark {
+    background-color: #eee;
+}
+
+.bg-lighter-dark {
+    background-color: #eee;
+}
+
+.shadow-dark {
+    box-shadow: 2px 2px 20px #777;
+}
+
+.shadow-light {
+    box-shadow: 2px 2px 20px #aaa;
+}
