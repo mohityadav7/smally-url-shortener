@@ -1,29 +1,78 @@
-function switchTheme() {
-    console.log("changing stylesheet\nBefore:");
-    var sheets = document.styleSheets;
-    for (var x = 0; x < sheets.length; ++x) {
-        console.log(sheets[x]);
+// switch stylesheets and save theme in using cookies
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
     }
+    return "";
+}
+
+function applyDarkTheme(darksheet, lightsheet, darkly, minty) {
+    darksheet.disabled = false;
+    lightsheet.disabled = true;
+    darkly.disabled = false;
+    minty.disabled = true;
+    // themeSheet.href = "https://bootswatch.com/4/darkly/bootstrap.min.css";
+    setCookie("theme", 'dark', 90);
+}
+
+function applyLightTheme(darksheet, lightsheet, darkly, minty) {
+    lightsheet.disabled = false;
+    darksheet.disabled = true;
+    // themeSheet.href = "https://bootswatch.com/4/minty/bootstrap.min.css";
+    minty.disabled = false;
+    darkly.disabled = true;
+    setCookie("theme", 'light', 90);
+}
+
+function switchTheme() {
     var darksheet = document.getElementById('darkStylesheet');
     var lightsheet = document.getElementById('lightStylesheet');
-    var themeSheet = document.getElementById('themeStylesheet');
+    var darkly = document.getElementById('darkly');
+    var minty = document.getElementById('minty');
 
     if (darksheet.disabled || !lightsheet.disabled) {
-        darksheet.disabled = false;
-        lightsheet.disabled = true;
-        themeSheet.href = "https://bootswatch.com/4/darkly/bootstrap.min.css";
+        applyDarkTheme(darksheet, lightsheet, darkly, minty);
     } else {
-        lightsheet.disabled = false;
-        darksheet.disabled = true;
-        themeSheet.href = "https://bootswatch.com/4/minty/bootstrap.min.css";
-    }
-    console.log("after:\n")
-    var sheets = document.styleSheets;
-    for (var x = 0; x < sheets.length; ++x) {
-        console.log(sheets[x]);
+        applyLightTheme(darksheet, lightsheet, darkly, minty);
     }
 }
 
+// check theme cookie and apply theme if theme cookie exist otherwise set new cookie
+$(document).ready(function () {
+    var theme = getCookie("theme");
+    if (theme != "") {
+        var darksheet = document.getElementById('darkStylesheet');
+        var lightsheet = document.getElementById('lightStylesheet');
+        var darkly = document.getElementById('darkly');
+        var minty = document.getElementById('minty');
+        var theme = getCookie('theme');
+        if (theme == 'dark') {
+            applyDarkTheme(darksheet, lightsheet, darkly, minty);
+        } else {
+            applyLightTheme(darksheet, lightsheet, darkly, minty);
+        }
+    } else {
+        setCookie("theme", 'dark', 90);
+    }
+});
+
+// copy to clipboard
 function copyToClipBoard() {
     node = document.getElementById('result');
     if (document.body.createTextRange) {
