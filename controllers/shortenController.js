@@ -16,7 +16,7 @@ function makeid() {
 
 module.exports = (app) => {
   // route for shorten using post method
-  app.post('/shorten', (req, res) => {
+  app.post('/shorten', (req, res, next) => {
     const user = req.user;
     var url = req.body.url;
     var private = req.body.private;
@@ -26,75 +26,81 @@ module.exports = (app) => {
       key = makeid();
     }
 
-    // create new mongodb document
-    var newUrl = new Url({
-      url: url,
-      key: key
-    });
-    console.log('New url being created:\nurl:', newUrl.url + '\nkey:', newUrl.key + '\n ');
+    // check if key is valid
+    if (key.includes('/')) {
+      req.flash('danger', 'Invalid key: key cannot contain "/"');
+      res.redirect('/');
+    } else {
+      // create new mongodb document
+      var newUrl = new Url({
+        url: url,
+        key: key
+      });
+      console.log('New url being created:\nurl:', newUrl.url + '\nkey:', newUrl.key + '\n ');
 
 
-    // user is logged in *****************************************************************************
-    // ***********************************************************************************************
-    if (user) {
-      if (!private) {
-        // save to public urls if url is not private
-        newUrl.save().then((savedUrl) => {
-          console.log(savedUrl);
+      // user is logged in *****************************************************************************
+      // ***********************************************************************************************
+      if (user) {
+        if (!private) {
+          // save to public urls if url is not private
+          newUrl.save().then((savedUrl) => {
+            console.log(savedUrl);
+          });
+        }
+
+        // save to user's urls in users collection array if user is logged in
+        console.log('updating current user: ', user.username);
+        User.findOne({
+          _id: user._id
+        }).then((user) => {
+          console.log('found user: ', user.username);
+        });
+
+        User.updateOne({
+          _id: user._id
+        }, {
+          $push: {
+            urls: newUrl
+          }
+        }).then((updatedDetails) => {
+          // redirect to homepage with shorted url
+          console.log('Updated details: ' + updatedDetails);
+          // find user to get url list
+          User.findOne({
+            _id: user._id
+          }).then((currentUser) => {
+            var urlList = currentUser.urls;
+            var shortedUrl = 'https://urll.herokuapp.com/' + key;
+
+            res.render('index', {
+              data: shortedUrl,
+              originalUrl: url,
+              user: user,
+              urlList: urlList
+            });
+          });
         });
       }
 
-      // save to user's urls in users collection array if user is logged in
-      console.log('updating current user: ', user.username);
-      User.findOne({
-        _id: user._id
-      }).then((user) => {
-        console.log('found user: ', user.username);
-      });
+      // else if user is not logged in ****************************************************
+      // else save to urls collection *****************************************************
+      else {
+        newUrl.save().then((savedUrl) => {
+          var shortedUrl = 'https://urll.herokuapp.com/' + savedUrl.key;
+          var unshortedUrl = savedUrl.url;
+          console.log('Url created: ' + shortedUrl);
+          console.log(savedUrl);
 
-      User.updateOne({
-        _id: user._id
-      }, {
-        $push: {
-          urls: newUrl
-        }
-      }).then((updatedDetails) => {
-        // redirect to homepage with shorted url
-        console.log('Updated details: ' + updatedDetails);
-        // find user to get url list
-        User.findOne({
-          _id: user._id
-        }).then((currentUser) => {
-          var urlList = currentUser.urls;
-          var shortedUrl = 'https://urll.herokuapp.com/' + key;
-
+          // redirect to homepage with shorted url
           res.render('index', {
             data: shortedUrl,
-            originalUrl: url,
-            user: user,
-            urlList: urlList
+            originalUrl: unshortedUrl,
+            user: null,
+            urlList: null
           });
         });
-      });
-    }
-
-    // else if user is not logged in ****************************************************
-    // else save to urls collection *****************************************************
-    else {
-      newUrl.save().then((savedUrl) => {
-        var shortedUrl = 'https://urll.herokuapp.com/' + savedUrl.key;
-        var unshortedUrl = savedUrl.url;
-        console.log('Url created: ' + shortedUrl);
-        console.log(savedUrl);
-
-        // redirect to homepage with shorted url
-        res.render('index', {
-          data: shortedUrl,
-          originalUrl: unshortedUrl,
-          user: null,
-          urlList: null
-        });
-      });
+      }
     }
   });
 

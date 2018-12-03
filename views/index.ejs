@@ -93,17 +93,17 @@
 					var shortedURL = "urll.herokuapp.com/" + urlList[i].key;
 				%>
 				<tr class="px-3">
-					<td>
+					<td class="py-3">
 						<%= i+1 %>
 					</td>
-					<td>
+					<td class="py-3">
 						<a class="url" href="<%= originalURL %>">
 							<%= originalURL %></a></td>
-					<td>
+					<td class="py-3">
 						<a class="url" href="<%= shortedURL %>">
 							<%= shortedURL %></a></td>
 					<td>
-						<button class="viewQRCodeButton btn btn-secondary mt-1" data-toggle="modal" data-target="#qr-modal">View</button>
+						<button class="viewQRCodeButton btn btn-secondary" data-toggle="modal" data-target="#qr-modal">View</button>
 					</td>
 				</tr>
 				<% } %>
