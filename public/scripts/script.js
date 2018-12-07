@@ -104,7 +104,7 @@ $(document).ready(function () {
         $.ajax({
             type: "get",
             url: '/qr/',
-            data: 'url=' + shortedUrl,
+            data: 'url=' + encodeURIComponent(shortedUrl),
             success: function (svg) {
                 var qrShorted = $('#qr-shorted-img');
                 qrShorted.html(svg);
@@ -117,7 +117,7 @@ $(document).ready(function () {
         $.ajax({
             type: "get",
             url: '/qr/',
-            data: 'url=' + unshortedUrl,
+            data: 'url=' + encodeURIComponent(unshortedUrl),
             success: function (svg) {
                 var qrUnshorted = $('#qr-unshorted-img');
                 qrUnshorted.html(svg);
@@ -141,7 +141,7 @@ $(document).ready(function () {
         $.ajax({
             type: "get",
             url: '/qr/',
-            data: 'url=' + shortedUrl,
+            data: 'url=' + encodeURIComponent(shortedUrl),
             success: function (svg) {
                 var qrShorted = $('#qr-shorted-img');
                 qrShorted.html(svg);
@@ -154,7 +154,7 @@ $(document).ready(function () {
         $.ajax({
             type: "get",
             url: '/qr/',
-            data: 'url=' + unshortedUrl,
+            data: 'url=' + encodeURIComponent(unshortedUrl),
             success: function (svg) {
                 var qrUnshorted = $('#qr-unshorted-img');
                 qrUnshorted.html(svg);
