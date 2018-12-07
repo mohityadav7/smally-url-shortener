@@ -104,7 +104,7 @@ app.get('/', (req, res) => {
 
 
 app.get('/*', (req, res) => {
-  res.send('404 | Page not found!');
+  res.render('404');
 });
 
 // listen to port

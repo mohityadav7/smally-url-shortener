@@ -28,7 +28,8 @@ module.exports = (app) => {
 
     // check if key is valid
     if (key.includes('/')) {
-      req.flash('danger', 'Invalid key: key cannot contain "/"');
+      res.redirect('/');
+    } else if (url.substr(0, 7).toLowerCase() != 'http://' && url.substr(0, 8).toLowerCase() != 'https://') {
       res.redirect('/');
     } else {
       // create new mongodb document
@@ -137,10 +138,14 @@ module.exports = (app) => {
             if (currentUser.urls.length > 0) {
               res.redirect(currentUser.urls[0].url);
             } else {
-              req.flash('danger', 'URL not found with key ' + req.params.key);
-              res.redirect('/');
+              res.render('404', {
+                data: 'URL not found with key ' + req.params.key,
+                user: user
+              });
             }
           } else {
+            // todo ***********************************
+            // check later
             console.log('url not found! Searching outside users collection.');
             Url.findOne({
               key: req.params.key
@@ -152,7 +157,10 @@ module.exports = (app) => {
                 console.log(url);
                 res.redirect(url.url);
               } else {
-                res.send('not found!');
+                res.render('404', {
+                  data: 'URL not found with key ' + req.params.key,
+                  user: user
+                });
               }
             });
           }
@@ -171,7 +179,10 @@ module.exports = (app) => {
             console.log(url);
             res.redirect(url.url);
           } else {
-            res.send('not found!');
+            res.render('404', {
+              data: 'URL not found with key ' + req.params.key,
+              user: user
+            });
           }
         });
       }
