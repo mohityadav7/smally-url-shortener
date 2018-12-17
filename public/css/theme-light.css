@@ -16,9 +16,9 @@ a:hover {
 }
 
 .shadow-dark {
-    box-shadow: 2px 2px 20px #777;
+    box-shadow: 0 0 30px rgba(0, 0, 0, .20);
 }
 
 .shadow-light {
-    box-shadow: 2px 2px 20px #aaa;
+    box-shadow: 0 0 30px rgba(0, 0, 0, .20);
 }

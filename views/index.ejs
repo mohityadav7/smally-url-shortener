@@ -12,7 +12,7 @@
 		<%- messages('my_message_template', locals) %>
 		<h1 class="text-center header-text my-4">Shorten your URL</h1>
 
-		<form id="shortUrlCreatorForm" class="my-3 p-5 shadow-dark bg-light" method="post" action="/shorten">
+		<form id="shortUrlCreatorForm" class="my-3 p-5 shadow-dark bg-light" method="post" action="/shorten" autocomplete="off">
 			<div class="form-row align-items-center">
 				<div class="col-md-12">
 
@@ -20,15 +20,19 @@
 						<div class="input-group-prepend">
 							<div class="input-group-text">URL</div>
 						</div>
-						<input type="text" name="url" class="form-control py-4" id="url" placeholder="https://www.example.com" required />
+						<input id="url" onkeyup="checkUrl()" type="text" name="url" class="focus-info form-control py-4" placeholder="https://www.example.com"
+						 required />
 					</div>
+					<span id="urlValidation"></span>
 
 					<div class="input-group my-4">
 						<div class="input-group-prepend">
 							<div class="input-group-text">urll.herokuapp.com/</div>
 						</div>
-						<input type="text" name="key" class="form-control py-4" id="key" placeholder="(Optional key)" />
+						<input type="text" onkeyup="checkCustomKey()" name="key" class="focus-success form-control py-4" id="key"
+						 placeholder="(Optional key)" />
 					</div>
+					<span id="keyValidation"></span>
 					<% if(user){ %>
 					<div class="input-group my-3">
 						<input id="privateCheckbox" name="private" class="form-check-input" type="checkbox" value="private">
@@ -71,14 +75,14 @@
 
 		<!-- show already shorted urls if logged in -->
 		<% if(urlList && urlList.length > 0) { %>
-		<table class="table table-light shadow-dark my-5">
+		<table class="table table-light w-100 shadow-dark my-5">
 			<thead>
 				<tr>
-					<th colspan="4" class="recent-heading">Recently shortened links:</th>
+					<td colspan="4" class="recent-heading">Recently shortened links:</td>
 				</tr>
 			</thead>
 			<thead>
-				<tr>
+				<tr class="w-100">
 					<th scope="col">#</th>
 					<th scope="col">Original URL</th>
 					<th scope="col">Short URL</th>
@@ -92,7 +96,7 @@
 					var originalURL = urlList[i].url;
 					var shortedURL = "urll.herokuapp.com/" + urlList[i].key;
 				%>
-				<tr class="px-3">
+				<tr class="px-3 w-100">
 					<td class="py-3">
 						<%= i+1 %>
 					</td>
@@ -100,7 +104,7 @@
 						<a class="url" href="<%= originalURL %>">
 							<%= originalURL %></a></td>
 					<td class="py-3">
-						<a class="url" href="<%= shortedURL %>">
+						<a class="url" href="<%= 'http://' + shortedURL %>">
 							<%= shortedURL %></a></td>
 					<td>
 						<button class="viewQRCodeButton btn btn-secondary" data-toggle="modal" data-target="#qr-modal">View</button>
