@@ -1,5 +1,5 @@
 // *********************************************************
-// STYLING HELPER FUNCTIONS
+// HELPER FUNCTIONS FOR STYLING
 // *********************************************************
 function focusDanger(element) {
     element.addClass('focus-danger');
@@ -155,6 +155,24 @@ function checkKeyAvailability() {
         console.log('textStatus: ' + textStatus + "error: " + errorThrown);
     })
 }
+
+
+
+
+// ***********************************************************************************
+// CHECK IF THE USER STOPS TYPING THE KEY, AND THEN CHECK FOR CUSTOM KEY VALIDATION
+// ***********************************************************************************
+let typingTimer;                //timer identifier
+let doneTypingInterval = 500;  //time in ms (5 seconds)
+let keyInput = document.getElementById('key');
+//on keyup, start the countdown
+keyInput.addEventListener('keyup', () => {
+    clearTimeout(typingTimer);
+    if (keyInput.value) {
+        typingTimer = setTimeout(checkCustomKey, doneTypingInterval);
+    }
+});
+
 
 
 

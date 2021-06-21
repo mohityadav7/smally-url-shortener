@@ -62,7 +62,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 
 db.once('open', () => {
-  console.log("Succssfully connected to MongoDB on mLab");
+  console.log("Succssfully connected to MongoDB.");
 });
 
 app.use(function (req, res, next) {
@@ -81,9 +81,11 @@ shortenController(app);
 
 app.get('/', (req, res) => {
   if (req.user) {
+    console.log('user logged in.')
     User.findOne({
       _id: req.user._id
     }).then((user) => {
+      console.log('user found.')
       res.render('index', {
         data: '',
         user: req.user,

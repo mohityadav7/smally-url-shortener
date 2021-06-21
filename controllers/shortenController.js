@@ -24,83 +24,84 @@ module.exports = (app) => {
 			key = makeid();
 		}
 
-		// check if key is valid
-		if (key.includes('/')) {
-			res.redirect('/');
-		} else if (url.substr(0, 7).toLowerCase() != 'http://' && url.substr(0, 8).toLowerCase() != 'https://') {
-			res.redirect('/');
-		} else {
-			// create new mongodb document
-			var newUrl = new Url({
-				url: url,
-				key: key
+		// check if url is valid
+		// if (key.includes('/')) {
+		// 	res.redirect('/');
+		// } else if (url.substr(0, 7).toLowerCase() != 'http://' && url.substr(0, 8).toLowerCase() != 'https://') {
+		// 	req.flash('danger', 'invalid url');
+		// 	res.redirect('/');
+		// } else {
+		// create new mongodb document
+		var newUrl = new Url({
+			url: url,
+			key: key
+		});
+		console.log('New url being created:\nurl:', newUrl.url + '\nkey:', newUrl.key + '\n ');
+
+
+		// user is logged in *****************************************************************************
+		// ***********************************************************************************************
+		if (user) {
+			if (!private) {
+				// save to public urls if url is not private
+				newUrl.save().then((savedUrl) => {
+					console.log(savedUrl);
+				});
+			}
+
+			// save to user's urls in users collection array if user is logged in
+			console.log('updating current user: ', user.username);
+			User.findOne({
+				_id: user._id
+			}).then((user) => {
+				console.log('found user: ', user.username);
 			});
-			console.log('New url being created:\nurl:', newUrl.url + '\nkey:', newUrl.key + '\n ');
 
-
-			// user is logged in *****************************************************************************
-			// ***********************************************************************************************
-			if (user) {
-				if (!private) {
-					// save to public urls if url is not private
-					newUrl.save().then((savedUrl) => {
-						console.log(savedUrl);
-					});
+			User.updateOne({
+				_id: user._id
+			}, {
+				$push: {
+					urls: newUrl
 				}
-
-				// save to user's urls in users collection array if user is logged in
-				console.log('updating current user: ', user.username);
+			}).then((updatedDetails) => {
+				// redirect to homepage with shorted url
+				console.log('Updated details: ' + updatedDetails);
+				// find user to get url list
 				User.findOne({
 					_id: user._id
-				}).then((user) => {
-					console.log('found user: ', user.username);
-				});
+				}).then((currentUser) => {
+					var urlList = currentUser.urls;
+					var shortedUrl = 'https://urll.herokuapp.com/' + key;
 
-				User.updateOne({
-					_id: user._id
-				}, {
-					$push: {
-						urls: newUrl
-					}
-				}).then((updatedDetails) => {
-					// redirect to homepage with shorted url
-					console.log('Updated details: ' + updatedDetails);
-					// find user to get url list
-					User.findOne({
-						_id: user._id
-					}).then((currentUser) => {
-						var urlList = currentUser.urls;
-						var shortedUrl = 'https://urll.herokuapp.com/' + key;
-
-						res.render('index', {
-							data: shortedUrl,
-							originalUrl: url,
-							user: user,
-							urlList: urlList
-						});
-					});
-				});
-			}
-
-			// else if user is not logged in ****************************************************
-			// else save to urls collection *****************************************************
-			else {
-				newUrl.save().then((savedUrl) => {
-					var shortedUrl = 'https://urll.herokuapp.com/' + savedUrl.key;
-					var unshortedUrl = savedUrl.url;
-					console.log('Url created: ' + shortedUrl);
-					console.log(savedUrl);
-
-					// redirect to homepage with shorted url
 					res.render('index', {
 						data: shortedUrl,
-						originalUrl: unshortedUrl,
-						user: null,
-						urlList: null
+						originalUrl: url,
+						user: user,
+						urlList: urlList
 					});
 				});
-			}
+			});
 		}
+
+		// else if user is not logged in ****************************************************
+		// else save to urls collection *****************************************************
+		else {
+			newUrl.save().then((savedUrl) => {
+				var shortedUrl = 'https://urll.herokuapp.com/' + savedUrl.key;
+				var unshortedUrl = savedUrl.url;
+				console.log('Url created: ' + shortedUrl);
+				console.log(savedUrl);
+
+				// redirect to homepage with shorted url
+				res.render('index', {
+					data: shortedUrl,
+					originalUrl: unshortedUrl,
+					user: null,
+					urlList: null
+				});
+			});
+		}
+		// }
 	});
 
 

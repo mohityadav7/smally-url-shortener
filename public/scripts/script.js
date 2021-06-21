@@ -61,11 +61,11 @@ function switchTheme() {
 // check theme cookie and apply theme if theme cookie exist otherwise set new cookie
 $(document).ready(function () {
     var theme = getCookie("theme");
+    var darksheet = document.getElementById('darkStylesheet');
+    var lightsheet = document.getElementById('lightStylesheet');
+    var darkly = document.getElementById('darkly');
+    var minty = document.getElementById('minty');
     if (theme != "") {
-        var darksheet = document.getElementById('darkStylesheet');
-        var lightsheet = document.getElementById('lightStylesheet');
-        var darkly = document.getElementById('darkly');
-        var minty = document.getElementById('minty');
         var theme = getCookie('theme');
         if (theme == 'dark') {
             applyDarkTheme(darksheet, lightsheet, darkly, minty);
@@ -73,7 +73,8 @@ $(document).ready(function () {
             applyLightTheme(darksheet, lightsheet, darkly, minty);
         }
     } else {
-        setCookie("theme", 'dark', 90);
+        setCookie("theme", 'light', 90);
+        applyLightTheme(darksheet, lightsheet, darkly, minty);
     }
 });
 
