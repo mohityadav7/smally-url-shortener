@@ -55,7 +55,8 @@ app.use(passport.session());
 
 // Connect to mLab database
 mongoose.connect(keys.mongodb.dbURI, {
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 var db = mongoose.connection;
