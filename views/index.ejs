@@ -102,10 +102,10 @@
 					</td>
 					<td class="py-3">
 						<a class="url" href="<%= originalURL %>">
-							<%= originalURL %></a></td>
+							<%= (originalURL.substring(0,90) + (originalURL.length > 89 ? '...' : '')) %></a></td>
 					<td class="py-3">
 						<a class="url" href="<%= 'http://' + shortedURL %>">
-							<%= shortedURL %></a></td>
+							<%= (shortedURL.substring(0,50) + (shortedURL.length > 49 ? '...' : '')) %></a></td>
 					<td>
 						<button class="viewQRCodeButton btn btn-secondary" data-toggle="modal" data-target="#qr-modal">View</button>
 					</td>
