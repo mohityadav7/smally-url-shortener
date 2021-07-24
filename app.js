@@ -7,7 +7,6 @@ const shortenController = require('./controllers/shortenController');
 const authController = require('./controllers/authController');
 const qrController = require('./controllers/qrController');
 const passportSetup = require('./config/passport-setup');
-const keys = require('./config/keys');
 const cookieSession = require('cookie-session');
 const User = require('./models/user-model');
 const flash = require('connect-flash');
@@ -33,7 +32,7 @@ app.set('view engine', 'ejs');
 // set cookie session
 app.use(cookieSession({
   maxAge: 30 * 24 * 60 * 60 * 1000,
-  keys: [keys.session.cookieKey]
+  keys: [process.env.SESSION_COOKIE_KEY]
 }));
 
 app.use(cookieParser('keyboard cat'));
@@ -54,7 +53,7 @@ app.use(passport.session());
 
 
 // Connect to mLab database
-mongoose.connect(keys.mongodb.dbURI, {
+mongoose.connect(process.env.MONGODB_DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });

@@ -4,7 +4,6 @@
 
 
 // const mongoose = require('mongoose');
-// const keys = require('../config/keys.js');
 // const User = require('../models/user-model');
 
 // module.exports = (app) => {
