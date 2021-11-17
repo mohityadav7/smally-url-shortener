@@ -17,6 +17,13 @@ const qr = require('qr-image');
 // set up app
 const app = express();
 
+app.use((request, response, next) => {
+  if (process.env.NODE_ENV != "development" && !request.secure) {
+    return response.redirect("https://" + request.headers.host + request.url);
+  }
+  next();
+});
+
 // set up body parser
 app.use(bodyParser.urlencoded({
   extended: false
