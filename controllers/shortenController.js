@@ -78,7 +78,7 @@ module.exports = (app) => {
             _id: user._id,
           }).then((currentUser) => {
             var urlList = currentUser.urls;
-            var shortedUrl = 'https://urll.herokuapp.com/' + key;
+            var shortedUrl = 'https://smally.tk/' + key;
 
             res.render('index', {
               data: shortedUrl,
@@ -94,7 +94,7 @@ module.exports = (app) => {
       // else save to urls collection *****************************************************
       else {
         newUrl.save().then((savedUrl) => {
-          var shortedUrl = 'https://urll.herokuapp.com/' + savedUrl.key;
+          var shortedUrl = 'smally.tk/' + savedUrl.key;
           var unshortedUrl = savedUrl.url;
           console.log('Url created: ' + shortedUrl);
           console.log(savedUrl);
