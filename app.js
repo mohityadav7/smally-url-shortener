@@ -17,6 +17,9 @@ const qr = require('qr-image');
 // set up app
 const app = express();
 
+// https://docs.divio.com/en/latest/how-to/node-express-force-https/
+app.enable("trust proxy");
+
 app.use((request, response, next) => {
   if (process.env.NODE_ENV != "development" && !request.secure) {
     return response.redirect("https://" + request.headers.host + request.url);
