@@ -70,26 +70,26 @@ a.result:hover {
   outline: none;
 }
 
-.footer-icons>a {
+.footer-icons > a {
   padding: 10px;
   font-size: 20px;
 }
 
-.footer-icons>a:hover {
+.footer-icons > a:hover {
   color: rgb(33, 150, 243);
 }
 
 .focus-info:focus {
-  border-color: #3498DB;
+  border-color: #3498db;
   /* box-shadow: 0px 1px 1px rgba(52, 152, 219, 0.1) inset, 0px 0px 3px #3498DB; */
-  box-shadow: 0px 0.2px 3px #3498DB;
+  box-shadow: 0px 0.2px 3px #3498db;
   outline: none;
 }
 
 .focus-danger:focus {
-  border-color: #E74C3C;
+  border-color: #e74c3c;
   /* box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 3px #E74C3C; */
-  box-shadow: 0px 0.2px 3px #E74C3C;
+  box-shadow: 0px 0.2px 3px #e74c3c;
   outline: none;
 }
 

@@ -5,22 +5,22 @@ $(document).ready(function () {
     var k = $('#key').val();
 
     $.ajax({
-        type: 'POST',
-        url: '/shorten',
-        data: {
-          url: u,
-          key: k
-        }
-      })
+      type: 'POST',
+      url: '/shorten',
+      data: {
+        url: u,
+        key: k,
+      },
+    })
       .done(function () {
-        console.log("success");
+        console.log('success');
         $('.result').html = 'success!';
       })
       .fail(function () {
-        console.log("error");
+        console.log('error');
       })
       .always(function () {
-        console.log("complete");
-      })
+        console.log('complete');
+      });
   });
 });

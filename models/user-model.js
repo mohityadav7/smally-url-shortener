@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // UrlSchema
 const UrlSchema = new mongoose.Schema({
   url: String,
-  key: String
+  key: String,
 });
 
 // create new Schema
@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
   imageURL: String,
   googleID: String,
   username: String,
-  urls: [UrlSchema]
+  urls: [UrlSchema],
 });
 
 // User model

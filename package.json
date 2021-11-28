@@ -4,7 +4,7 @@
   "description": "url shortner",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "start": "node app.js"
   },
   "author": "mohit yadav",
   "license": "ISC",
@@ -21,5 +21,8 @@
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
     "qr-image": "^3.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.3.0"
   }
 }

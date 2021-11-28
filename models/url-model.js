@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Schema Setup
 var urlSchema = mongoose.Schema({
   url: String,
-  key: String
+  key: String,
 });
 
 // Model Setup

@@ -2,122 +2,122 @@
 <html lang="en">
 
 <head>
-	<%- include('partials/head') -%>
-	<title>URL Shortener</title>
+  <%- include('partials/head') -%>
+  <title>URL Shortener</title>
 </head>
 
 <body align="center">
-	<%- include('partials/navbar') -%>
-	<div class="main container">
-		<%- messages('my_message_template', locals) %>
-		<h1 class="text-center header-text my-4">Shorten your URL</h1>
+  <%- include('partials/navbar') -%>
+  <div class="main container">
+    <%- messages('my_message_template', locals) %>
+    <h1 class="text-center header-text my-4">Shorten your URL</h1>
 
-		<form id="shortUrlCreatorForm" class="my-3 p-5 shadow-dark bg-light" method="post" action="/shorten" autocomplete="off">
-			<div class="form-row align-items-center">
-				<div class="col-md-12">
+    <form id="shortUrlCreatorForm" class="my-3 p-5 shadow-dark bg-light" method="post" action="/shorten" autocomplete="off">
+      <div class="form-row align-items-center">
+        <div class="col-md-12">
 
-					<div class="input-group my-4">
-						<div class="input-group-prepend">
-							<div class="input-group-text">URL</div>
-						</div>
-						<input id="url" onkeyup="checkUrl()" type="text" name="url" class="focus-info form-control py-4" placeholder="https://www.example.com"
-						 required />
-					</div>
-					<span id="urlValidation"></span>
+          <div class="input-group my-4">
+            <div class="input-group-prepend">
+              <div class="input-group-text">URL</div>
+            </div>
+            <input id="url" onkeyup="checkUrl()" type="text" name="url" class="focus-info form-control py-4" placeholder="https://www.example.com" required />
+          </div>
+          <span id="urlValidation"></span>
 
-					<div class="input-group my-4">
-						<div class="input-group-prepend">
-							<div class="input-group-text">urll.herokuapp.com/</div>
-						</div>
-						<input type="text" onkeyup="checkCustomKey()" name="key" class="focus-success form-control py-4" id="key"
-						 placeholder="(Optional key)" />
-					</div>
-					<span id="keyValidation"></span>
-					<% if(user){ %>
-					<div class="input-group my-3">
-						<input id="privateCheckbox" name="private" class="form-check-input" type="checkbox" value="private">
-						<label id="privateCheckboxLabel" for="privateCheckbox" class="form-check-label">Make Private</label>
-					</div>
-					<% } %>
-				</div>
+          <div class="input-group my-4">
+            <div class="input-group-prepend">
+              <div class="input-group-text">urll.herokuapp.com/</div>
+            </div>
+            <input type="text" onkeyup="checkCustomKey()" name="key" class="focus-success form-control py-4" id="key" placeholder="(Optional key)" />
+          </div>
+          <span id="keyValidation"></span>
+          <% if(user){ %>
+          <div class="input-group my-3">
+            <input id="privateCheckbox" name="private" class="form-check-input" type="checkbox" value="private">
+            <label id="privateCheckboxLabel" for="privateCheckbox" class="form-check-label">Make Private</label>
+          </div>
+          <% } %>
+        </div>
 
-				<div class="col-md-12 mt-2 mb-2">
-					<input type="submit" value="Shorten" class="d-block mx-auto btn btn-secondary py-2 px-5" />
-				</div>
-			</div>
-		</form>
+        <div class="col-md-12 mt-2 mb-2">
+          <input type="submit" value="Shorten" class="d-block mx-auto btn btn-secondary py-2 px-5" />
+        </div>
+      </div>
+    </form>
 
-		<!-- show shorted url -->
-		<%- include('partials/qr-modal') -%>
-		<% if(data){ %>
-		<div class="p-4 mt-5 bg-light-dark">
-			<h6>Shorted Url:</h6>
-			<div class="result-container py-2">
-				<a class="result" id="result" href="<%= data %>">
-					<%= data %></a>
-			</div>
-			<!-- button to copy link to clipboard -->
-			<button id="copyButton" onclick="copyToClipBoard()" class="btn btn-secondary mt-1">Copy</button>
-			<!-- Button trigger modal -->
-			<button id="getQRCodeButton" class="btn btn-secondary mt-1" data-toggle="modal" data-target="#qr-modal">Get QR Code</button>
-		</div>
-		<% } %>
+    <!-- show shorted url -->
+    <%- include('partials/qr-modal') -%>
+    <% if(data){ %>
+    <div class="p-4 mt-5 bg-light-dark">
+      <h6>Shorted Url:</h6>
+      <div class="result-container py-2">
+        <a class="result" id="result" href="<%= data %>">
+          <%= data %></a>
+      </div>
+      <!-- button to copy link to clipboard -->
+      <button id="copyButton" onclick="copyToClipBoard()" class="btn btn-secondary mt-1">Copy</button>
+      <!-- Button trigger modal -->
+      <button id="getQRCodeButton" class="btn btn-secondary mt-1" data-toggle="modal" data-target="#qr-modal">Get QR Code</button>
+    </div>
+    <% } %>
 
-		<% if(originalUrl){ %>
-		<div class="p-4 mt-3 bg-light-dark">
-			<h6>Original Url:</h6>
-			<div class="originalUrlContainer py-2">
-				<a id="originalUrl" class="my-2" href="<%= originalUrl %>">
-					<%= originalUrl %></a>
-			</div>
-		</div>
-		<% } %>
+    <% if(originalUrl){ %>
+    <div class="p-4 mt-3 bg-light-dark">
+      <h6>Original Url:</h6>
+      <div class="originalUrlContainer py-2">
+        <a id="originalUrl" class="my-2" href="<%= originalUrl %>">
+          <%= originalUrl %></a>
+      </div>
+    </div>
+    <% } %>
 
-		<!-- show already shorted urls if logged in -->
-		<% if(urlList && urlList.length > 0) { %>
-		<table class="table table-light w-100 shadow-dark my-5">
-			<thead>
-				<tr>
-					<td colspan="4" class="recent-heading">Recently shortened links:</td>
-				</tr>
-			</thead>
-			<thead>
-				<tr class="w-100">
-					<th scope="col">#</th>
-					<th scope="col">Original URL</th>
-					<th scope="col">Short URL</th>
-					<th scope="col">QR-Code</th>
-				</tr>
-			</thead>
-			<tbody>
-				<%
+    <!-- show already shorted urls if logged in -->
+    <% if(urlList && urlList.length > 0) { %>
+    <table class="table table-light w-100 shadow-dark my-5">
+      <thead>
+        <tr>
+          <td colspan="4" class="recent-heading">Recently shortened links:</td>
+        </tr>
+      </thead>
+      <thead>
+        <tr class="w-100">
+          <th scope="col">#</th>
+          <th scope="col">Original URL</th>
+          <th scope="col">Short URL</th>
+          <th scope="col">QR-Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%
 					urlList = urlList.reverse();
 					for(var i=0; i < urlList.length; ++i){
 					var originalURL = urlList[i].url;
 					var shortedURL = "urll.herokuapp.com/" + urlList[i].key;
 				%>
-				<tr class="px-3 w-100">
-					<td class="py-3">
-						<%= i+1 %>
-					</td>
-					<td class="py-3">
-						<a class="url" href="<%= originalURL %>">
-							<%= (originalURL.substring(0,90) + (originalURL.length > 89 ? '...' : '')) %></a></td>
-					<td class="py-3">
-						<a class="url" href="<%= 'http://' + shortedURL %>">
-							<%= (shortedURL.substring(0,50) + (shortedURL.length > 49 ? '...' : '')) %></a></td>
-					<td>
-						<button class="viewQRCodeButton btn btn-secondary" data-toggle="modal" data-target="#qr-modal">View</button>
-					</td>
-				</tr>
-				<% } %>
-			</tbody>
-		</table>
-		<% } %>
-	</div> <!-- container -->
+        <tr class="px-3 w-100">
+          <td class="py-3">
+            <%= i+1 %>
+          </td>
+          <td class="py-3">
+            <a class="url" href="<%= originalURL %>">
+              <%= (originalURL.substring(0,90) + (originalURL.length > 89 ? '...' : '')) %></a>
+          </td>
+          <td class="py-3">
+            <a class="url" href="<%= 'http://' + shortedURL %>">
+              <%= (shortedURL.substring(0,50) + (shortedURL.length > 49 ? '...' : '')) %></a>
+          </td>
+          <td>
+            <button class="viewQRCodeButton btn btn-secondary" data-toggle="modal" data-target="#qr-modal">View</button>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <% } %>
+  </div> <!-- container -->
 
-	<%- include('partials/footer') -%>
-	<%- include('partials/scripts') -%>
+  <%- include('partials/footer') -%>
+  <%- include('partials/scripts') -%>
 </body>
 
 </html>
