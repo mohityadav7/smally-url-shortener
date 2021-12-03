@@ -11,7 +11,6 @@ const User = require('./models/user-model');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const qr = require('qr-image');
 
 // set up app
 const app = express();
