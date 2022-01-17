@@ -2,6 +2,13 @@
 
 Smally is a user friendly URL shortener with many features including QR Code generation and create private URLs.
 
+## Available at:
+
+Should be available at least one of these:
+- [smally.tk](https://smally.tk)
+- [urll.herokuapp.com](https://urll.herokuapp.com)
+- [AWS Elastic Beanstalk](http://shorty-env.eba-3nfbpmgw.ap-south-1.elasticbeanstalk.com)
+
 ## Features
 
 -   Generate short link
