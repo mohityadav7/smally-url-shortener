@@ -50,7 +50,7 @@ const debounce = (delay, fn) => {
 
 function isURL(str, callback) {
   var pattern = new RegExp(
-    '^(https?:\\/\\/)?' + // protocol
+    '^(https?:\\/\\/)' + // protocol
       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' + // domain name
       '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
       '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
@@ -115,15 +115,20 @@ function checkUrl() {
   if (input.length == 0) {
     focusInfo($('#url'));
   } else {
-    isURL(input, function (exists) {
-      if (exists) {
+    isURL(input, function (isValid) {
+      if (isValid) {
         $('#urlValidation').text('Looks good!');
         focusSuccess($('#url'));
-        console.log('exist');
       } else {
-        $('#urlValidation').text('Please enter a valid URL');
         focusDanger($('#url'));
-        console.log('Doesnt exist');
+        if (
+          !input.toLowerCase().startsWith('https://') &&
+          !input.toLowerCase().startsWith('http://')
+        ) {
+          $('#urlValidation').text('URL should start with http:// or https://');
+        } else {
+          $('#urlValidation').text('Please enter a valid URL');
+        }
       }
     });
   }
