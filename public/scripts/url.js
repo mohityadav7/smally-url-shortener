@@ -33,6 +33,21 @@ function focusInfo(element) {
 //     http.send();
 // }
 
+// *********************************************************************
+// HELPER FUNCTIONS
+// *********************************************************************
+const debounce = (delay, fn) => {
+  let timer = null;
+  return function () {
+    const context = this;
+    const args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(context, args);
+    }, delay);
+  };
+};
+
 function isURL(str, callback) {
   var pattern = new RegExp(
     '^(https?:\\/\\/)?' + // protocol
@@ -61,9 +76,6 @@ function issURL(str) {
   return pattern.test(str);
 }
 
-// *********************************************************************
-// HELPER FUNCTIONS FOR URL VALIDATION
-// *********************************************************************
 // check existence using jquery AJAX
 // function urlExists(url, callback) {
 //     $.ajax({
@@ -156,7 +168,7 @@ function checkKeyAvailability() {
 // *********************************************************************
 // CUSTOM KEY VALIDATION
 // *********************************************************************
-function checkCustomKey() {
+let checkCustomKey = debounce(300, function () {
   var key = $('#key')[0].value;
   key = key.trim();
 
@@ -193,4 +205,4 @@ function checkCustomKey() {
       });
     }
   }
-}
+});
